@@ -18,6 +18,11 @@ Gui, Add, DropDownList, x10 y+3 w200 vDropdownPosition, 1|2|3|4|5|6|7|8
 Gui, Add, Text, x10 y+5 w200 vDropdownLabelQty, Select Quantity:
 Gui, Add, DropDownList, x10 y+3 w200 vDropdownQty, 1|2|3|4|5|6|7|8
 
+GuiControl, Hide, DropdownLabel
+GuiControl, Hide, DropdownPosition
+GuiControl, Hide, DropdownLabelQty
+GuiControl, Hide, DropdownQty
+
 ; Add key description labels with 10px spacing
 Gui, Add, Text, x10 y+30 w300, CLICK Press F5 to start.`nPress F6 to pause the program.`nThe program will remain paused until F5 is pressed again.`nPress F7 to stop the program and exit the application.
 
