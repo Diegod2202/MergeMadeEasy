@@ -250,7 +250,6 @@ RunFunction2(dropdownPosition, dropdownQuantity) {
         Return
     }
 
-    
     repeatedCoordinates := []
     Coordinates := []
     
@@ -259,19 +258,21 @@ RunFunction2(dropdownPosition, dropdownQuantity) {
     repeatedcoordinates.push([182, 342])
     repeatedcoordinates.push([284, 553])
     
-    coordinates.push([212, 229])
-    coordinates.push([287, 219])
-    coordinates.push([68, 271])
-    coordinates.push([135, 279])
-    coordinates.push([212, 279])
-    coordinates.push([276, 270])
+    Coordinates.push([68, 229]) ; 1
+    Coordinates.push([135, 219]) ; 2
+    Coordinates.push([212, 229]) ; 3
+    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([68, 271]) ; 5
+    Coordinates.push([135, 279]) ; 6
+    Coordinates.push([212, 279]) ; 7
+    Coordinates.push([276, 270]) ; 8
 
     ; Perform the click actions
-    Loop, % coordinates.MaxIndex()
+    Loop, %dropdownQuantity%
     {
         ; Access the x and y coordinates relative to the active window
-        x := coordinates[A_Index][1]
-        y := coordinates[A_Index][2]
+        x := coordinates[dropdownPosition][1]
+        y := coordinates[dropdownPosition][2]
         Send, {Click %x%, %y%} ;
         Sleep, speed
             Loop, % repeatedCoordinates.MaxIndex()
@@ -286,6 +287,7 @@ RunFunction2(dropdownPosition, dropdownQuantity) {
         Sleep, speed
         Send, {Click 400, 100} ; 
         Sleep, speed
+        dropdownPosition++
     }
 
     MsgBox, Pets lvl30!
