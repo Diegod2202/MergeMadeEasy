@@ -4,10 +4,14 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; Define an array with personalized function names
-functionNames := ["Auto Bound", "Auto lvl30", "Auto Merge", "RightClickSpam", "ClickSpam", "Auto Rebirth", "Auto R-Feather into Seal Jade", "Auto Seal Jade"]
+functionNames := ["Auto Bound", "Auto lvl30", "Auto Merge", "RightClickSpam", "ClickSpam", "Auto Rebirth", "Auto R-Feather into Seal Jade", "Auto Seal Jade", "Auto pet capture", "Function 10", "Function 11", "Function 12", "Function 13", "Function 14", "Function 15"]
 
-; Add radio buttons for the 8 functions
-Loop, 8
+; Set font color to white and background to black
+Gui, Color, 000000  ; Set background color to black
+Gui, Font, cWhite  ; Set text color to white
+
+; Add radio buttons for the 15 functions
+Loop, 15
 {
     Gui, Add, Radio, vFunction%A_Index% gRadioSelect w200, % functionNames[A_Index]
 }
@@ -24,7 +28,7 @@ GuiControl, Hide, DropdownLabelQty
 GuiControl, Hide, DropdownQty
 
 ; Add key description labels with 10px spacing
-Gui, Add, Text, x10 y+30 w300, CLICK Press F5 to start.`nPress F6 to pause the program.`nThe program will remain paused until F5 is pressed again.`nPress F7 to stop the program and exit the application.
+Gui, Add, Text, x10 y+30 w300, CLICK Press F5 to start.`nPress F6 to pause the program.`nPress F6 and then reset to stop any function.`nPress F7 to stop the program and exit the application.
 
 ; Add a Reset button
 Gui, Add, Button, gReset, Reset
@@ -37,12 +41,12 @@ ExitApp
 
 RadioSelect:
 Gui, Submit, NoHide
-Loop, 8
+Loop, 15
 {
     GuiControlGet, isChecked, , Function%A_Index%
     if (isChecked) {
         ; Show dropdowns for all functions except RightClickSpam and ClickSpam
-        if (A_Index != 4 && A_Index != 5) {
+        if (A_Index != 4 && A_Index != 5 && A_Index != 9) {
             GuiControl, Show, DropdownLabel
             GuiControl, Show, DropdownPosition
             GuiControl, Show, DropdownLabelQty
@@ -59,38 +63,62 @@ Return
 
 Reset:
     ; Reset the radio buttons and dropdowns
-    Loop, 8
+    Loop, 15
         GuiControl,, Function%A_Index%, 0
 
     GuiControl, Hide, DropdownLabel
     GuiControl, Hide, DropdownPosition
     GuiControl, Hide, DropdownLabelQty
     GuiControl, Hide, DropdownQty
+
+    RunFunction(100)
 Return
 
-; F5 to start the program
 F5::
-    Gui, Submit, NoHide
-    selectedFunction := ""
-    selectedPosition := ""
-    selectedQuantity := ""
-
-    Loop, 8
-    {
-        GuiControlGet, isChecked, , Function%A_Index%
-        if (isChecked) {
-            selectedFunction := functionNames[A_Index]
-            GuiControlGet, selectedPosition, , DropdownPosition
-            GuiControlGet, selectedQuantity, , DropdownQty
-            break
-        }
+Gui, Submit, NoHide
+selectedFunction := ""
+selectedPosition := ""
+selectedQuantity := ""
+Pause, Off
+Loop, 15 {
+    GuiControlGet, isChecked, , Function%A_Index%
+    if (isChecked) {
+        selectedFunction := functionNames[A_Index]
+        GuiControlGet, selectedPosition, , DropdownPosition
+        GuiControlGet, selectedQuantity, , DropdownQty
+        break
     }
+}
 
-    if (selectedFunction = "" || selectedPosition = "" || selectedQuantity = "") {
+if (selectedFunction = "") {
+    MsgBox, Please select a function before starting.
+    Return
+}
+
+if (selectedFunction != "RightClickSpam" && selectedFunction != "ClickSpam" && selectedFunction != "Auto pet capture") {
+    if (selectedPosition = "" || selectedQuantity = "") {
         MsgBox, Please select all required options before starting.
-    } else {
-        RunFunction(selectedFunction, selectedPosition, selectedQuantity)
+        Return
     }
+    RunFunction(selectedFunction, selectedPosition, selectedQuantity)
+} else {
+    RunFunction(selectedFunction)
+}
+Return
+
+F6::Pause
+isPaused := !isPaused
+if (isPaused) {
+    ToolTip, Program Paused
+} else {
+    ToolTip, Program Resumed
+}
+Sleep, 1000
+ToolTip  ; Clear tooltip
+Return
+
+F7::
+ExitApp
 Return
 
 RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
@@ -118,14 +146,58 @@ RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
     else if (functionName = "Auto Seal Jade") {
         RunFunction8(dropdownPosition, dropdownQuantity)
     }
+    else if (functionName = "Auto pet capture") {
+        RunFunction9()   
+    }
+    else if (functionName = "Function 10") {
+        MsgBox, To be done in the near future!
+    }
+    else if (functionName = "Function 11") {
+        MsgBox, To be done in the near future!
+    }
+    else if (functionName = "Function 12") {
+        MsgBox, To be done in the near future!
+    }
+    else if (functionName = "Function 13") {
+        MsgBox, To be done in the near future!
+    }
+    else if (functionName = "Function 14") {
+        MsgBox, To be done in the near future!
+    }
+    else if (functionName = "Function 15") {
+        MsgBox, To be done in the near future!
+    }
+    else if(functionName = 100) {
+        Pause, Off
+        RunFunction1(100,100) ;
+        RunFunction2(100,100) ;
+        RunFunction3(100,100) ;
+        RunFunction4(100) ;
+        RunFunction5(100) ;
+        RunFunction6(100,100) ;
+        RunFunction7(100,100) ;
+        RunFunction8(100,100) ;
+        RunFunction9(100) ;
+        RunFunction10(100) ;
+        RunFunction11(100) ;
+        RunFunction12(100) ;
+        RunFunction13(100) ;
+        RunFunction14(100) ;
+        RunFunction15(100) ;
+        MsgBox, All the functions stopped and program unpaused.
+    }
     else {
         MsgBox, Function not found!
     }
 }
 
+
 RunFunction1(dropdownPosition, dropdownQuantity) {
     speed := 800 ; Default speed in milliseconds
-
+    if(dropdownPosition = 100) {
+        Return
+    }
+    
     repeatedCoordinates := []
     Coordinates := []
     
@@ -172,7 +244,11 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
 
 RunFunction2(dropdownPosition, dropdownQuantity) {
     speed := 800 ; Default speed in milliseconds
+    if(dropdownPosition = 100) {
+        Return
+    }
 
+    
     repeatedCoordinates := []
     Coordinates := []
     
@@ -229,6 +305,10 @@ RightClickSpam() {
 
 RunFunction3(dropdownPosition, dropdownQuantity) {
    speed := 500 ; Default speed in milliseconds
+
+    if(dropdownPosition = 100) {
+        Return
+    }
     Send, {Click 143, 228} ;
     Sleep, speed
     Send, {Click 90, 340} ;
@@ -271,16 +351,27 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
     MsgBox, PetsMerged
 }
 
-RunFunction4() {
+RunFunction4(breaker := "") {
+    if(breaker = 100) {
+        Return
+    }
+    
     RightClickSpam()
 }
 
-RunFunction5() {
+RunFunction5(breaker := "") {
+    if(breaker = 100) {
+        Return
+    }
+    
     ClickSpam()
 }
 
 RunFunction6(dropdownPosition, dropdownQuantity) {
     speed := 500 ;
+    if(dropdownPosition = 100) {
+        Return
+    }
     Send, {Click 235, 145} ;
     Sleep, speed
     MouseMove, 940, 760
@@ -296,11 +387,17 @@ RunFunction6(dropdownPosition, dropdownQuantity) {
 }
 
 RunFunction7(dropdownPosition, dropdownQuantity) {
+    if(dropdownPosition = 100) {
+        Return
+    }
     MsgBox, ToBeDone
 }
 
 RunFunction8(dropdownPosition, dropdownQuantity) {
     speed := 500 ;
+    if(dropdownPosition = 100) {
+        Return
+    }
     Coordinates := []
     repeatedCoordinates := []
 
@@ -342,3 +439,76 @@ RunFunction8(dropdownPosition, dropdownQuantity) {
     
 }
 
+
+RunFunction9(breaker := "") {
+    global looper
+    looper := 1  
+    if (breaker == 100) {
+        looper := 0
+        return
+    }
+    MouseMove, 60, 60
+    rightClickCount := 0
+    while (looper == 1) {
+        
+        if (looper == 0) {
+            break
+        }
+        Click, Right
+        rightClickCount++
+        Sleep, 100
+
+        if (rightClickCount >= 500) {
+            Click, 980, 660
+            rightClickCount := 0
+            Sleep, 100
+        }
+        Send, {Tab}
+        Sleep, 100
+        SendInput, {Tab}
+        Sleep, 100
+        ControlSend,, {Tab}, A
+        Sleep, 100
+    }
+}
+
+
+
+
+RunFunction10(breaker := ""){
+    if(breaker = 100) {
+        Return
+    }
+    MsgBox, toBeDone
+}
+
+RunFunction11(breaker := ""){
+    if(breaker = 100) {
+        Return
+    }
+    MsgBox, toBeDone
+}
+RunFunction12(breaker := ""){
+    if(breaker = 100) {
+        Return
+    }
+    MsgBox, toBeDone
+}
+RunFunction13(breaker := ""){
+    if(breaker = 100) {
+        Return
+    }
+    MsgBox, toBeDone
+}
+RunFunction14(breaker := ""){
+    if(breaker = 100) {
+        Return
+    }
+    MsgBox, toBeDone
+}
+RunFunction15(breaker := ""){
+    if(breaker = 100) {
+        Return
+    }
+    MsgBox, toBeDone
+}
