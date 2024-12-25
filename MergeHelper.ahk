@@ -214,19 +214,21 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
     repeatedcoordinates.push([850, 400])
     
     ; Add unique coordinates to the list
-    coordinates.push([212, 229])
-    coordinates.push([287, 219])
-    coordinates.push([68, 271])
-    coordinates.push([135, 279])
-    coordinates.push([212, 279])
-    coordinates.push([276, 270])
+    Coordinates.push([68, 229]) ; 1
+    Coordinates.push([135, 219]) ; 2
+    Coordinates.push([212, 229]) ; 3
+    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([68, 271]) ; 5
+    Coordinates.push([135, 279]) ; 6
+    Coordinates.push([212, 279]) ; 7
+    Coordinates.push([276, 270]) ; 8
 
     ; Perform the click actions
-    Loop, % coordinates.MaxIndex()
+    Loop, %dropdownQuantity%
     {
         ; Access the x and y coordinates relative to the active window
-        x := coordinates[A_Index][1]
-        y := coordinates[A_Index][2]
+        x := coordinates[dropdownPosition][1]
+        y := coordinates[dropdownPosition][2]
         Send, {Click %x%, %y%} ;
         Sleep, speed
             Loop, % repeatedCoordinates.MaxIndex()
@@ -237,9 +239,9 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
                 Send, {Click %x%, %y%} ;
                 Sleep, speed
                 }
+        dropdownPosition++     
     }
-
-    MsgBox, Your 6 pets are now bound!
+    MsgBox, Your pets are now bound!
 }
 
 RunFunction2(dropdownPosition, dropdownQuantity) {
@@ -400,15 +402,6 @@ RunFunction8(dropdownPosition, dropdownQuantity) {
     }
     Coordinates := []
     repeatedCoordinates := []
-
-    Coordinates.push([68, 229]) ; 1
-    Coordinates.push([135, 219]) ; 2
-    Coordinates.push([212, 229]) ; 3
-    Coordinates.push([287, 219]) ; 4 
-    Coordinates.push([68, 271]) ; 5
-    Coordinates.push([135, 279]) ; 6
-    Coordinates.push([212, 279]) ; 7
-    Coordinates.push([276, 270]) ; 8
 
     repeatedCoordinates.push([91, 339]) ; Carry
     repeatedCoordinates.push([540, 390]) ; Pet Manager
