@@ -10,7 +10,7 @@ functionNames := ["Auto Bound", "Auto lvl30", "Auto Merge", "RightClickSpam", "C
 Gui, Color, 000000  ; Set background color to black
 Gui, Font, cWhite  ; Set text color to white
 
-; Add radio buttons for the 15 functions
+; Add radio buttons for the functions
 Loop, 15
 {
     Gui, Add, Radio, vFunction%A_Index% gRadioSelect w200, % functionNames[A_Index]
@@ -410,33 +410,30 @@ RunFunction8(dropdownPosition, dropdownQuantity) {
     Coordinates.push([212, 279]) ; 7
     Coordinates.push([276, 270]) ; 8
 
-    repeatedcoordinates.push([91, 339]) ; Carry
-    repeatedcoordinates.push([540, 390]) ; Pet Manager
-    repeatedcoordinates.push([540, 390]) ; Pet Manager
-    repeatedcoordinates.push([540, 390]) ; Pet Manager
-    repeatedcoordinates.push([148, 359]) ; Pet Raising
-    repeatedcoordinates.push([440, 400]) ; Pet window
-    repeatedcoordinates.push([440, 320]) ; Seal spirit
-    repeatedcoordinates.push([440, 320]) ; Seal spirit next window
-    repeatedcoordinates.push([850, 400]) ; Ok
-    repeatedcoordinates.push([850, 400]) ; Ok
+    repeatedCoordinates.push([91, 339]) ; Carry
+    repeatedCoordinates.push([540, 390]) ; Pet Manager
+    repeatedCoordinates.push([540, 390]) ; Pet Manager
+    repeatedCoordinates.push([540, 390]) ; Pet Manager
+    repeatedCoordinates.push([148, 359]) ; Pet Raising
+    repeatedCoordinates.push([440, 400]) ; Pet window
+    repeatedCoordinates.push([440, 320]) ; Seal spirit
+    repeatedCoordinates.push([850, 400]) ; Ok
+    repeatedCoordinates.push([440, 320]) ; Seal spirit next window
+    repeatedCoordinates.push([850, 400]) ; Ok
+    repeatedCoordinates.push([850, 400]) ; Ok
 
-    Loop, dropdownQuantity
-        {
-            x := Coordinates[dropdownPosition][1]
-            y := Coordinates[ddropdownPosition][2]
-            Send, {Click %x%, %y%} ;
-            Sleep, speed
-                Loop, % repeatedCoordinates.MaxIndex()
-                    {
-                    x := repeatedCoordinates[A_Index][1]
-                    y := repeatedCoordinates[A_Index][2]
-                    Send, {Click %x%, %y%} ;
-                    Sleep, speed
-                    }
-        }
-    
-    
+    Loop, %dropdownQuantity% {
+        x := Coordinates[dropdownPosition][1]
+        y := Coordinates[dropdownPosition][2]
+        Click, %x%, %y%
+        Sleep, speed
+            Loop, % repeatedCoordinates.MaxIndex() {
+                x2 := repeatedCoordinates[A_Index][1]
+                y2 := repeatedCoordinates[A_Index][2]
+                Click, %x2%, %y2%
+                Sleep, speed
+            }
+    }
 }
 
 
