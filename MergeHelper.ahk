@@ -62,16 +62,7 @@ Loop, 15
 Return
 
 Reset:
-    ; Reset the radio buttons and dropdowns
-    Loop, 15
-        GuiControl,, Function%A_Index%, 0
-
-    GuiControl, Hide, DropdownLabel
-    GuiControl, Hide, DropdownPosition
-    GuiControl, Hide, DropdownLabelQty
-    GuiControl, Hide, DropdownQty
-
-    RunFunction(100)
+Reload
 Return
 
 F5::
@@ -167,25 +158,6 @@ RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
     else if (functionName = "Function 15") {
         MsgBox, To be done in the near future!
     }
-    else if(functionName = 100) {
-        Pause, Off
-        RunFunction1(100,100) ;
-        RunFunction2(100,100) ;
-        RunFunction3(100,100) ;
-        RunFunction4(100) ;
-        RunFunction5(100) ;
-        RunFunction6(100) ;
-        RunFunction7(100,100) ;
-        RunFunction8(100,100) ;
-        RunFunction9(100) ;
-        RunFunction10(100) ;
-        RunFunction11(100) ;
-        RunFunction12(100) ;
-        RunFunction13(100) ;
-        RunFunction14(100) ;
-        RunFunction15(100) ;
-        MsgBox, All the functions stopped and program unpaused.
-    }
     else {
         MsgBox, Function not found!
     }
@@ -194,9 +166,6 @@ RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
 
 RunFunction1(dropdownPosition, dropdownQuantity) {
     speed := 800 ; Default speed in milliseconds
-    if(dropdownPosition = 100) {
-        Return
-    }
     
     repeatedCoordinates := []
     Coordinates := []
@@ -246,9 +215,6 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
 
 RunFunction2(dropdownPosition, dropdownQuantity) {
     speed := 800 ; Default speed in milliseconds
-    if(dropdownPosition = 100) {
-        Return
-    }
 
     repeatedCoordinates := []
     Coordinates := []
@@ -311,10 +277,6 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
    speed := 500 ; Default speed in milliseconds
     Coordinates := []
 
-    if(dropdownPosition = 100) {
-        Return
-    }
-
     Coordinates.push([68, 229]) ; 1
     Coordinates.push([135, 219]) ; 2
     Coordinates.push([212, 229]) ; 3
@@ -371,27 +333,16 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
     MsgBox, PetsMerged
 }
 
-RunFunction4(breaker := "") {
-    if(breaker = 100) {
-        Return
-    }
-    
+RunFunction4() {
     RightClickSpam()
 }
 
-RunFunction5(breaker := "") {
-    if(breaker = 100) {
-        Return
-    }
-    
-    ClickSpam()
+RunFunction5() {
+      ClickSpam()
 }
 
-RunFunction6(breaker := "") {
+RunFunction6() {
     speed := 500 ;
-    if(breaker = 100) {
-        Return
-    }
     Send, {Click 235, 145} ;
     Sleep, speed
     MouseMove, 940, 760
@@ -407,17 +358,11 @@ RunFunction6(breaker := "") {
 }
 
 RunFunction7(dropdownPosition, dropdownQuantity) {
-    if(dropdownPosition = 100) {
-        Return
-    }
     MsgBox, ToBeDone
 }
 
 RunFunction8(dropdownPosition, dropdownQuantity) {
     speed := 500 ;
-    if(dropdownPosition = 100) {
-        Return
-    }
     Coordinates := []
     repeatedCoordinates := []
 
@@ -448,20 +393,10 @@ RunFunction8(dropdownPosition, dropdownQuantity) {
 }
 
 
-RunFunction9(breaker := "") {
-    global looper
-    looper := 1  
-    if (breaker == 100) {
-        looper := 0
-        return
-    }
+RunFunction9() {
     MouseMove, 60, 60
     rightClickCount := 0
-    while (looper == 1) {
-        
-        if (looper == 0) {
-            break
-        }
+    while (true) {
         Click, Right
         rightClickCount++
         Sleep, 100
@@ -483,40 +418,26 @@ RunFunction9(breaker := "") {
 
 
 
-RunFunction10(breaker := ""){
-    if(breaker = 100) {
-        Return
-    }
+RunFunction10(){
     MsgBox, toBeDone
 }
 
-RunFunction11(breaker := ""){
-    if(breaker = 100) {
-        Return
-    }
+RunFunction11(){
     MsgBox, toBeDone
 }
-RunFunction12(breaker := ""){
-    if(breaker = 100) {
-        Return
-    }
+
+RunFunction12(){
     MsgBox, toBeDone
 }
-RunFunction13(breaker := ""){
-    if(breaker = 100) {
-        Return
-    }
+
+RunFunction13(){
     MsgBox, toBeDone
 }
-RunFunction14(breaker := ""){
-    if(breaker = 100) {
-        Return
-    }
+
+RunFunction14(){
     MsgBox, toBeDone
 }
-RunFunction15(breaker := ""){
-    if(breaker = 100) {
-        Return
-    }
+
+RunFunction15(){
     MsgBox, toBeDone
 }
