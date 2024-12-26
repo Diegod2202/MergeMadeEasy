@@ -3,6 +3,9 @@
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 
+
+
+
 ; Define an array with personalized function names
 functionNames := ["Auto Bound", "Auto lvl30", "Auto Merge", "RightClickSpam", "ClickSpam", "Auto Rebirth", "Auto R-Feather into Seal Jade", "Auto Seal Jade", "Auto pet capture", "Function 10", "Function 11", "Function 12", "Function 13", "Function 14", "Function 15"]
 
@@ -32,6 +35,9 @@ Gui, Add, Text, x10 y+30 w300, CLICK Press F5 to start.`nPress F6 to pause the p
 
 ; Add a Reset button
 Gui, Add, Button, gReset, Reset
+
+; Add a button to select the Capture2Text path
+Gui, Add, Button, gSelectCapture2TextPath, Select Capture2Text Path
 
 Gui, Show,, MergeHelper By: Diegod
 Return
@@ -65,7 +71,7 @@ Reset:
 Reload
 Return
 
-F5::
+F5:: ; Start the selected function
 Gui, Submit, NoHide
 selectedFunction := ""
 selectedPosition := ""
@@ -86,15 +92,17 @@ if (selectedFunction = "") {
     Return
 }
 
-if (selectedFunction != "RightClickSpam" && selectedFunction != "ClickSpam" && selectedFunction != "Auto pet capture" && selectedFunction != "Auto Rebirth") {
+if (selectedFunction != "RightClickSpam" && selectedFunction != "ClickSpam" && selectedFunction != "Auto pet capture" && selectedFunction != "Auto Rebirth" && selectedFunction != "Auto R-Feather into Seal Jade") {
     if (selectedPosition = "" || selectedQuantity = "") {
         MsgBox, Please select all required options before starting.
         Return
     }
     RunFunction(selectedFunction, selectedPosition, selectedQuantity)
 } else {
-    RunFunction(selectedFunction)
+    RunFunction(selectedFunction, selectedPosition, selectedQuantity)
 }
+
+
 Return
 
 F6::Pause
@@ -108,8 +116,16 @@ Sleep, 1000
 ToolTip  ; Clear tooltip
 Return
 
-F7::
-ExitApp
+F7::ExitApp
+Return
+
+global capture2TextPath
+
+SelectCapture2TextPath:
+FileSelectFile, capture2TextPath, 3, , Select Capture2Text.exe, Executables (*.exe)
+if (capture2TextPath != "") {
+    MsgBox, Capture2Text path selected: %capture2TextPath%
+}
 Return
 
 RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
@@ -141,22 +157,22 @@ RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
         RunFunction9()   
     }
     else if (functionName = "Function 10") {
-        MsgBox, To be done in the near future!
+        RunFunction10()  
     }
     else if (functionName = "Function 11") {
-        MsgBox, To be done in the near future!
+        RunFunction11()  
     }
     else if (functionName = "Function 12") {
-        MsgBox, To be done in the near future!
+        RunFunction12()  
     }
     else if (functionName = "Function 13") {
-        MsgBox, To be done in the near future!
+        RunFunction13()  
     }
     else if (functionName = "Function 14") {
-        MsgBox, To be done in the near future!
+        RunFunction14()  
     }
     else if (functionName = "Function 15") {
-        MsgBox, To be done in the near future!
+        RunFunction15()  
     }
     else {
         MsgBox, Function not found!
@@ -170,6 +186,15 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
     repeatedCoordinates := []
     Coordinates := []
     
+    Coordinates.push([68, 229]) ; 1
+    Coordinates.push([135, 219]) ; 2
+    Coordinates.push([212, 229]) ; 3
+    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([68, 271]) ; 5
+    Coordinates.push([135, 279]) ; 6
+    Coordinates.push([212, 279]) ; 7
+    Coordinates.push([276, 270]) ; 8
+
     repeatedcoordinates.push([91, 339])
     repeatedcoordinates.push([540, 390])
     repeatedcoordinates.push([540, 390])
@@ -183,14 +208,7 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
     repeatedcoordinates.push([850, 400])
     
     ; Add unique coordinates to the list
-    Coordinates.push([68, 229]) ; 1
-    Coordinates.push([135, 219]) ; 2
-    Coordinates.push([212, 229]) ; 3
-    Coordinates.push([287, 219]) ; 4 
-    Coordinates.push([68, 271]) ; 5
-    Coordinates.push([135, 279]) ; 6
-    Coordinates.push([212, 279]) ; 7
-    Coordinates.push([276, 270]) ; 8
+    
 
     ; Perform the click actions
     Loop, %dropdownQuantity%
@@ -357,15 +375,99 @@ RunFunction6() {
     }
 }
 
-RunFunction7(dropdownPosition, dropdownQuantity) {
-    MsgBox, ToBeDone
+RunFunction7(dropdownPosition="", dropdownQuantity="") {
+    
+    Coordinates := []
+    
+    Coordinates.push([68, 229]) ; 1
+    Coordinates.push([135, 219]) ; 2
+    Coordinates.push([212, 229]) ; 3
+    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([68, 271]) ; 5
+    Coordinates.push([135, 279]) ; 6
+    Coordinates.push([212, 279]) ; 7
+    Coordinates.push([276, 270]) ; 8
+
+    if(dropdownPosition = "") {
+       InitialPosition := 1
+    }Else{
+        InitialPosition := dropdownPosition
+    }
+    
+    x := coordinates[InitialPosition][1]
+    y := coordinates[InitialPosition][2]
+
+    MouseMove, x, y
+
+    imagePath := A_ScriptDir . "\minoegg.png"
+
+    
+    Loop
+    {
+    ImageSearch, FoundX, FoundY, 730, 220, 1000, 770, *50 %imagePath%
+
+    if (ErrorLevel = 0)
+    {
+        break
+    }
+    else
+    {
+        break
+    }
+    }
+
+
+    ; ; Asegúrate de que Capture2Text esté configurado
+    ; if (capture2TextPath = "") {
+    ;     MsgBox, Please select the Capture2Text path first.
+    ;     Return
+    ; }
+
+    ; ; Configuración de coordenadas relativas a la ventana activa
+    ; CoordMode, Pixel, Window
+    ; CoordMode, Mouse, Window
+
+    ; ; Coordenadas relativas a la ventana
+    ; x_start := 618
+    ; y_start := 217
+    ; x_end := 653
+    ; y_end := 232
+
+    ; ; Obtener la posición de la ventana activa
+    ; WinGetPos, winX, winY, winWidth, winHeight, A
+
+    ; ; Convertir las coordenadas a relativas a la pantalla
+    ; abs_x_start := winX + x_start
+    ; abs_y_start := winY + y_start
+    ; abs_x_end := winX + x_end
+    ; abs_y_end := winY + y_end
+
+    ; ; Ejecutar Capture2Text con las coordenadas ajustadas
+    ; RunWait, %capture2TextPath% %abs_x_start% %abs_y_start% %abs_x_end% %abs_y_end%
+    ; savvyValue := clipboard
+
+    ; MsgBox, %savvyValue%
 }
+
+
+
+
+
 
 RunFunction8(dropdownPosition, dropdownQuantity) {
     speed := 500 ;
     Coordinates := []
     repeatedCoordinates := []
 
+    Coordinates.push([68, 229]) ; 1
+    Coordinates.push([135, 219]) ; 2
+    Coordinates.push([212, 229]) ; 3
+    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([68, 271]) ; 5
+    Coordinates.push([135, 279]) ; 6
+    Coordinates.push([212, 279]) ; 7
+    Coordinates.push([276, 270]) ; 8
+    
     repeatedCoordinates.push([91, 339]) ; Carry
     repeatedCoordinates.push([540, 390]) ; Pet Manager
     repeatedCoordinates.push([540, 390]) ; Pet Manager
@@ -416,8 +518,6 @@ RunFunction9() {
 }
 
 
-
-
 RunFunction10(){
     MsgBox, toBeDone
 }
@@ -441,3 +541,9 @@ RunFunction14(){
 RunFunction15(){
     MsgBox, toBeDone
 }
+
+
+
+
+
+
