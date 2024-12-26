@@ -17,7 +17,7 @@ Loop, 15
 }
 
 ; Add dropdowns for position and quantity for all functions
-Gui, Add, Text, x10 y+5 w200 vDropdownLabel, Select Position:
+Gui, Add, Text, x10 y+5 w200 vDropdownLabel, Select Initial Position:
 Gui, Add, DropDownList, x10 y+3 w200 vDropdownPosition, 1|2|3|4|5|6|7|8
 Gui, Add, Text, x10 y+5 w200 vDropdownLabelQty, Select Quantity:
 Gui, Add, DropDownList, x10 y+3 w200 vDropdownQty, 1|2|3|4|5|6|7|8
@@ -46,7 +46,7 @@ Loop, 15
     GuiControlGet, isChecked, , Function%A_Index%
     if (isChecked) {
         ; Show dropdowns for all functions except RightClickSpam and ClickSpam
-        if (A_Index != 4 && A_Index != 5 && A_Index != 9) {
+        if (A_Index != 4 && A_Index != 5 && A_Index != 9 && A_Index != 6) {
             GuiControl, Show, DropdownLabel
             GuiControl, Show, DropdownPosition
             GuiControl, Show, DropdownLabelQty
@@ -95,7 +95,7 @@ if (selectedFunction = "") {
     Return
 }
 
-if (selectedFunction != "RightClickSpam" && selectedFunction != "ClickSpam" && selectedFunction != "Auto pet capture") {
+if (selectedFunction != "RightClickSpam" && selectedFunction != "ClickSpam" && selectedFunction != "Auto pet capture" && selectedFunction != "Auto Rebirth") {
     if (selectedPosition = "" || selectedQuantity = "") {
         MsgBox, Please select all required options before starting.
         Return
@@ -138,7 +138,7 @@ RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
         RunFunction5()
     }
     else if (functionName = "Auto Rebirth") {
-        RunFunction6(dropdownPosition, dropdownQuantity)
+        RunFunction6()
     }
     else if (functionName = "Auto R-Feather into Seal Jade") {
         RunFunction7(dropdownPosition, dropdownQuantity)
@@ -174,7 +174,7 @@ RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
         RunFunction3(100,100) ;
         RunFunction4(100) ;
         RunFunction5(100) ;
-        RunFunction6(100,100) ;
+        RunFunction6(100) ;
         RunFunction7(100,100) ;
         RunFunction8(100,100) ;
         RunFunction9(100) ;
@@ -309,11 +309,27 @@ RightClickSpam() {
 
 RunFunction3(dropdownPosition, dropdownQuantity) {
    speed := 500 ; Default speed in milliseconds
+    Coordinates := []
 
     if(dropdownPosition = 100) {
         Return
     }
-    Send, {Click 143, 228} ;
+
+    Coordinates.push([68, 229]) ; 1
+    Coordinates.push([135, 219]) ; 2
+    Coordinates.push([212, 229]) ; 3
+    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([68, 271]) ; 5
+    Coordinates.push([135, 279]) ; 6
+    Coordinates.push([212, 279]) ; 7
+    Coordinates.push([276, 270]) ; 8
+    
+    x := coordinates[dropdownPosition][1]
+    y := coordinates[dropdownPosition][2]
+    x2 := coordinates[dropdownPosition+1][1]
+    y2 := coordinates[dropdownPosition+1][2]
+    
+    Send, {Click %x%, %y% ;
     Sleep, speed
     Send, {Click 90, 340} ;
     Sleep, speed
@@ -323,13 +339,13 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
     Sleep, speed
     MouseClickDrag, left, 360, 210, 715, 210
     Sleep, speed
-    Loop, dropdownQuantity
+    Loop, %dropdownQuantity%
     {  
-    MouseClickDrag, left, 138, 217, 400, 300
+    MouseClickDrag, left, %x%, %y%, 400, 300
     Sleep, speed
     Send, {Click 400, 300} ;
     Sleep, speed    
-    MouseClickDrag, left, 212, 225, 580, 300
+    MouseClickDrag, left, %x2%, %y2%, 580, 300
     Sleep, speed
     Send, {Click 580, 300} ;
     Sleep, speed
@@ -371,9 +387,9 @@ RunFunction5(breaker := "") {
     ClickSpam()
 }
 
-RunFunction6(dropdownPosition, dropdownQuantity) {
+RunFunction6(breaker := "") {
     speed := 500 ;
-    if(dropdownPosition = 100) {
+    if(breaker = 100) {
         Return
     }
     Send, {Click 235, 145} ;
