@@ -397,25 +397,18 @@ RunFunction7(dropdownPosition="", dropdownQuantity="") {
     x := coordinates[InitialPosition][1]
     y := coordinates[InitialPosition][2]
 
-    MouseMove, x, y
-
-    imagePath := A_ScriptDir . "\minoegg.png"
-
-    
-    Loop
-    {
-    ImageSearch, FoundX, FoundY, 730, 220, 1000, 770, *50 %imagePath%
-
-    if (ErrorLevel = 0)
-    {
-        break
-    }
-    else
-    {
-        break
-    }
+    if(dropdownQuantity != "") {
+        Quantity := dropdownQuantity
     }
 
+    b64ImageMinoEgg:= "iVBORw0KGgoAAAANSUhEUgAAABMAAAARCAYAAAA/mJfHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHSSURBVDhPhdAxSBtRHMfxAw0EBHEqSidHx04FoUNdpI4BQQSXhk6BLqKL7VQJFboJKQg6RGpAsGIkSqWKCIougcbSDlqdLN0yWAhI4Ofv99698z2NOny4u3d33/u/i6bGBlD6OIJGLQvU93F1Om3gdNK6KHK9ClyeWX/yRqOaNY7XxvBpIoOZ10OIFMI5X2ZIFDXh2pCl4O1YbTSJyersCHKvBhAdr78NYpoqiLnJ/pWtFjFNV3qXQWRC1Lz4Eki26MTbaxWT/cIoYyfjMGq5UPwR4+cb4AendU6mgN98x1Pf4D9T6OowA2z3hxRwjgaBQ27ZuS+m0P/KM6DcexPS+U5fGNvhM6KYplPkaDhxN+ZTTBHHn0y+Pwe+9iTsNvd4sZIGljtD6x3AAaMJxp3dp3ymK1AvdMWxTS0wUORRdL79JKSA8433F/kxj40ppOAWpyvzhujcRTThcsR1UsRRZD6VuImJAr7HYtqeQgWuk41t8cJZo1JshTYesBSq5P2YQgueOVqkViG5FRt/kbKxZoULfsjFWgW1rTx5oep0GzLdkY019E/ui4nbsguRAi6Ue5mOYwpRky/58NmjZ+Ipfn1oM/6+TxvF4RR62iNkuyNcAzoEov6dEnO4AAAAAElFTkSuQmCC"
+    coords := SearchImage(b64ImageMinoEgg)
+
+    if (coords) {
+     MouseMove, coords.x, coords.y
+    } else {
+     MsgBox "No coordinates found."
+    }    
 
     ; ; Asegúrate de que Capture2Text esté configurado
     ; if (capture2TextPath = "") {
@@ -450,7 +443,57 @@ RunFunction7(dropdownPosition="", dropdownQuantity="") {
 }
 
 
+SearchImage(b64Code) {
+    image := "HBITMAP:*" . b64ToPng(b64Code)
+    FoundX := ""
+    FoundY := ""
+    CoordMode, Pixel, Window ; Establecer el modo de coordenadas para ImageSearch
+    ErrorLevel := 0 ; Resetear ErrorLevel antes de ejecutar el comando
 
+    ; Intentar buscar la imagen hasta encontrarla
+    Loop {
+        ; Realizar la búsqueda de imagen
+        ImageSearch, FoundX, FoundY, 700, 200, 1000, 780, %image%
+        
+        ; Si la imagen se encuentra, salir del bucle
+        if (ErrorLevel == 0) {
+            return {x: FoundX, y: FoundY} ; Retornar las coordenadas como un objeto
+        }
+        
+        ; Si no se encuentra, esperar un momento y seguir intentando
+        Sleep, 500 ; Esperar medio segundo antes de intentar de nuevo
+    }
+}
+
+b64ToPng(B64, NewHandle := False) {
+    Static hBitmap := 0
+    If (NewHandle)
+       hBitmap := 0
+    If (hBitmap)
+       Return hBitmap
+    If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", 0, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
+       Return False
+    VarSetCapacity(Dec, DecLen, 0)
+    If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", &Dec, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
+       Return False
+    ; Bitmap creation adopted from "How to convert Image data (JPEG/PNG/GIF) to hBITMAP?" by SKAN
+    ; -> http://www.autohotkey.com/board/topic/21213-how-to-convert-image-data-jpegpnggif-to-hbitmap/?p=139257
+    hData := DllCall("Kernel32.dll\GlobalAlloc", "UInt", 2, "UPtr", DecLen, "UPtr")
+    pData := DllCall("Kernel32.dll\GlobalLock", "Ptr", hData, "UPtr")
+    DllCall("Kernel32.dll\RtlMoveMemory", "Ptr", pData, "Ptr", &Dec, "UPtr", DecLen)
+    DllCall("Kernel32.dll\GlobalUnlock", "Ptr", hData)
+    DllCall("Ole32.dll\CreateStreamOnHGlobal", "Ptr", hData, "Int", True, "PtrP", pStream)
+    hGdip := DllCall("Kernel32.dll\LoadLibrary", "Str", "Gdiplus.dll", "UPtr")
+    VarSetCapacity(SI, 16, 0), NumPut(1, SI, 0, "UChar")
+    DllCall("Gdiplus.dll\GdiplusStartup", "PtrP", pToken, "Ptr", &SI, "Ptr", 0)
+    DllCall("Gdiplus.dll\GdipCreateBitmapFromStream",  "Ptr", pStream, "PtrP", pBitmap)
+    DllCall("Gdiplus.dll\GdipCreateHBITMAPFromBitmap", "Ptr", pBitmap, "PtrP", hBitmap, "UInt", 0)
+    DllCall("Gdiplus.dll\GdipDisposeImage", "Ptr", pBitmap)
+    DllCall("Gdiplus.dll\GdiplusShutdown", "Ptr", pToken)
+    DllCall("Kernel32.dll\FreeLibrary", "Ptr", hGdip)
+    DllCall(NumGet(NumGet(pStream + 0, 0, "UPtr") + (A_PtrSize * 2), 0, "UPtr"), "Ptr", pStream)
+    Return hBitmap
+}
 
 
 
