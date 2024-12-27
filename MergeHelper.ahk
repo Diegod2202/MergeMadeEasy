@@ -410,36 +410,37 @@ RunFunction7(dropdownPosition="", dropdownQuantity="") {
      MsgBox "No coordinates found."
     }    
 
-    ; ; Asegúrate de que Capture2Text esté configurado
-    ; if (capture2TextPath = "") {
-    ;     MsgBox, Please select the Capture2Text path first.
-    ;     Return
-    ; }
+   ; Make sure Capture2Text is configured
+if (capture2TextPath = "") {
+    MsgBox, Please select the Capture2Text path first.
+    Return
+}
 
-    ; ; Configuración de coordenadas relativas a la ventana activa
-    ; CoordMode, Pixel, Window
-    ; CoordMode, Mouse, Window
+; Configure coordinates relative to the active window
+CoordMode, Pixel, Window
+CoordMode, Mouse, Window
 
-    ; ; Coordenadas relativas a la ventana
-    ; x_start := 618
-    ; y_start := 217
-    ; x_end := 653
-    ; y_end := 232
+; Coordinates relative to the window
+x_start := 618
+y_start := 217
+x_end := 653
+y_end := 232
 
-    ; ; Obtener la posición de la ventana activa
-    ; WinGetPos, winX, winY, winWidth, winHeight, A
+; Get the position of the active window
+WinGetPos, winX, winY, winWidth, winHeight, A
 
-    ; ; Convertir las coordenadas a relativas a la pantalla
-    ; abs_x_start := winX + x_start
-    ; abs_y_start := winY + y_start
-    ; abs_x_end := winX + x_end
-    ; abs_y_end := winY + y_end
+; Convert the coordinates to screen-relative
+abs_x_start := winX + x_start
+abs_y_start := winY + y_start
+abs_x_end := winX + x_end
+abs_y_end := winY + y_end
 
-    ; ; Ejecutar Capture2Text con las coordenadas ajustadas
-    ; RunWait, %capture2TextPath% %abs_x_start% %abs_y_start% %abs_x_end% %abs_y_end%
-    ; savvyValue := clipboard
+; Run Capture2Text with the adjusted coordinates
+RunWait, %capture2TextPath% %abs_x_start% %abs_y_start% %abs_x_end% %abs_y_end%
+savvyValue := clipboard
 
-    ; MsgBox, %savvyValue%
+MsgBox, %savvyValue%
+
 }
 
 
@@ -447,23 +448,24 @@ SearchImage(b64Code) {
     image := "HBITMAP:*" . b64ToPng(b64Code)
     FoundX := ""
     FoundY := ""
-    CoordMode, Pixel, Window ; Establecer el modo de coordenadas para ImageSearch
-    ErrorLevel := 0 ; Resetear ErrorLevel antes de ejecutar el comando
+    CoordMode, Pixel, Window ; Set coordinate mode for ImageSearch
+    ErrorLevel := 0 ; Reset ErrorLevel before running the command
 
-    ; Intentar buscar la imagen hasta encontrarla
+    ; Try searching for the image until it's found
     Loop {
-        ; Realizar la búsqueda de imagen
+        ; Perform the image search
         ImageSearch, FoundX, FoundY, 700, 200, 1000, 780, %image%
         
-        ; Si la imagen se encuentra, salir del bucle
+        ; If the image is found, exit the loop
         if (ErrorLevel == 0) {
-            return {x: FoundX, y: FoundY} ; Retornar las coordenadas como un objeto
+            return {x: FoundX, y: FoundY} ; Return coordinates as an object
         }
         
-        ; Si no se encuentra, esperar un momento y seguir intentando
-        Sleep, 500 ; Esperar medio segundo antes de intentar de nuevo
+        ; If not found, wait for a moment and try again
+        Sleep, 500 ; Wait half a second before trying again
     }
 }
+
 
 b64ToPng(B64, NewHandle := False) {
     Static hBitmap := 0
