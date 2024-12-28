@@ -3,11 +3,11 @@
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 
-
-
-
 ; Define an array with personalized function names
 functionNames := ["Auto Bound", "Auto lvl30", "Auto Merge", "RightClickSpam", "ClickSpam", "Auto Rebirth", "Auto R-Feather into Seal Jade", "Auto Seal Jade", "Auto pet capture", "Function 10", "Function 11", "Function 12", "Function 13", "Function 14", "Function 15"]
+
+; Define an array with personalized messages
+functionMessages := ["Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5.","Remember to always press the windows before pressing F5."]
 
 ; Set font color to white and background to black
 Gui, Color, 000000  ; Set background color to black
@@ -18,6 +18,9 @@ Loop, 15
 {
     Gui, Add, Radio, vFunction%A_Index% gRadioSelect w200, % functionNames[A_Index]
 }
+
+; Add dynamic text
+Gui, Add, Text, x10 y+5 w300 vDynamicText, Select Initial Position:
 
 ; Add dropdowns for position and quantity for all functions
 Gui, Add, Text, x10 y+5 w200 vDropdownLabel, Select Initial Position:
@@ -46,62 +49,64 @@ GuiClose:
 ExitApp
 
 RadioSelect:
-Gui, Submit, NoHide
-Loop, 15
-{
-    GuiControlGet, isChecked, , Function%A_Index%
-    if (isChecked) {
-        ; Show dropdowns for all functions except RightClickSpam and ClickSpam
-        if (A_Index != 4 && A_Index != 5 && A_Index != 9 && A_Index != 6) {
-            GuiControl, Show, DropdownLabel
-            GuiControl, Show, DropdownPosition
-            GuiControl, Show, DropdownLabelQty
-            GuiControl, Show, DropdownQty
-        } else {
-            GuiControl, Hide, DropdownLabel
-            GuiControl, Hide, DropdownPosition
-            GuiControl, Hide, DropdownLabelQty
-            GuiControl, Hide, DropdownQty
+    Gui, Submit, NoHide
+    Loop, 15
+    {
+        GuiControlGet, isChecked, , Function%A_Index%
+        if (isChecked) {
+            ; Show dropdowns for all functions except RightClickSpam and ClickSpam
+            if (A_Index != 4 && A_Index != 5 && A_Index != 9 && A_Index != 6) {
+                GuiControl, Show, DropdownLabel
+                GuiControl, Show, DropdownPosition
+                GuiControl, Show, DropdownLabelQty
+                GuiControl, Show, DropdownQty
+            } else {
+                GuiControl, Hide, DropdownLabel
+                GuiControl, Hide, DropdownPosition
+                GuiControl, Hide, DropdownLabelQty
+                GuiControl, Hide, DropdownQty
+            }
+            ; Update the dynamic text with the corresponding message
+            GuiControl,, DynamicText, % functionMessages[A_Index]
+            break
         }
     }
-}
 Return
 
 Reset:
-Reload
+    Reload
 Return
 
 F5:: ; Start the selected function
-Gui, Submit, NoHide
-selectedFunction := ""
-selectedPosition := ""
-selectedQuantity := ""
-Pause, Off
-Loop, 15 {
-    GuiControlGet, isChecked, , Function%A_Index%
-    if (isChecked) {
-        selectedFunction := functionNames[A_Index]
-        GuiControlGet, selectedPosition, , DropdownPosition
-        GuiControlGet, selectedQuantity, , DropdownQty
-        break
+    Gui, Submit, NoHide
+    selectedFunction := ""
+    selectedPosition := ""
+    selectedQuantity := ""
+    Pause, Off
+    Loop, 15 {
+        GuiControlGet, isChecked, , Function%A_Index%
+        if (isChecked) {
+            selectedFunction := functionNames[A_Index]
+            GuiControlGet, selectedPosition, , DropdownPosition
+            GuiControlGet, selectedQuantity, , DropdownQty
+            break
+        }
     }
-}
 
-if (selectedFunction = "") {
-    MsgBox, Please select a function before starting.
-    Return
-}
-
-if (selectedFunction != "RightClickSpam" && selectedFunction != "ClickSpam" && selectedFunction != "Auto pet capture" && selectedFunction != "Auto Rebirth" && selectedFunction != "Auto R-Feather into Seal Jade") {
-    if (selectedPosition = "" || selectedQuantity = "") {
-        MsgBox, Please select all required options before starting.
+    if (selectedFunction = "") {
+        MsgBox, Please select a function before starting.
         Return
     }
-    RunFunction(selectedFunction, selectedPosition, selectedQuantity)
-} else {
-    RunFunction(selectedFunction, selectedPosition, selectedQuantity)
-}
 
+    if (selectedFunction != "RightClickSpam" && selectedFunction != "ClickSpam" && selectedFunction != "Auto pet capture" && selectedFunction != "Auto Rebirth" && selectedFunction != "Auto R-Feather into Seal Jade") {
+        if (selectedPosition = "" || selectedQuantity = "") {
+            MsgBox, Please select all required options before starting.
+            Return
+        }
+        RunFunction(selectedFunction, selectedPosition, selectedQuantity)
+    } else {
+        RunFunction(selectedFunction, selectedPosition, selectedQuantity)
+    }
 
 Return
 
@@ -122,10 +127,10 @@ Return
 global capture2TextPath
 
 SelectCapture2TextPath:
-FileSelectFile, capture2TextPath, 3, , Select Capture2Text.exe, Executables (*.exe)
-if (capture2TextPath != "") {
-    MsgBox, Capture2Text path selected: %capture2TextPath%
-}
+    FileSelectFile, capture2TextPath, 3, , Select Capture2Text.exe, Executables (*.exe)
+    if (capture2TextPath != "") {
+        MsgBox, Capture2Text path selected: %capture2TextPath%
+    }
 Return
 
 RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
@@ -154,42 +159,41 @@ RunFunction(functionName, dropdownPosition := "", dropdownQuantity := "") {
         RunFunction8(dropdownPosition, dropdownQuantity)
     }
     else if (functionName = "Auto pet capture") {
-        RunFunction9()   
+        RunFunction9()
     }
     else if (functionName = "Function 10") {
-        RunFunction10()  
+        RunFunction10()
     }
     else if (functionName = "Function 11") {
-        RunFunction11()  
+        RunFunction11()
     }
     else if (functionName = "Function 12") {
-        RunFunction12()  
+        RunFunction12()
     }
     else if (functionName = "Function 13") {
-        RunFunction13()  
+        RunFunction13()
     }
     else if (functionName = "Function 14") {
-        RunFunction14()  
+        RunFunction14()
     }
     else if (functionName = "Function 15") {
-        RunFunction15()  
+        RunFunction15()
     }
     else {
         MsgBox, Function not found!
     }
 }
 
-
 RunFunction1(dropdownPosition, dropdownQuantity) {
     speed := 800 ; Default speed in milliseconds
-    
+
     repeatedCoordinates := []
     Coordinates := []
-    
+
     Coordinates.push([68, 229]) ; 1
     Coordinates.push([135, 219]) ; 2
     Coordinates.push([212, 229]) ; 3
-    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([287, 219]) ; 4
     Coordinates.push([68, 271]) ; 5
     Coordinates.push([135, 279]) ; 6
     Coordinates.push([212, 279]) ; 7
@@ -206,9 +210,8 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
     repeatedcoordinates.push([467, 282])
     repeatedcoordinates.push([850, 400])
     repeatedcoordinates.push([850, 400])
-    
+
     ; Add unique coordinates to the list
-    
 
     ; Perform the click actions
     Loop, %dropdownQuantity%
@@ -218,15 +221,15 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
         y := coordinates[dropdownPosition][2]
         Send, {Click %x%, %y%} ;
         Sleep, speed
-            Loop, % repeatedCoordinates.MaxIndex()
-                {
-                ; Access the x and y coordinates relative to the active window
-                x := repeatedCoordinates[A_Index][1]
-                y := repeatedCoordinates[A_Index][2]
-                Send, {Click %x%, %y%} ;
-                Sleep, speed
-                }
-        dropdownPosition++     
+        Loop, % repeatedCoordinates.MaxIndex()
+        {
+            ; Access the x and y coordinates relative to the active window
+            x := repeatedCoordinates[A_Index][1]
+            y := repeatedCoordinates[A_Index][2]
+            Send, {Click %x%, %y%} ;
+            Sleep, speed
+        }
+        dropdownPosition++
     }
     MsgBox, Your pets are now bound!
 }
@@ -236,16 +239,16 @@ RunFunction2(dropdownPosition, dropdownQuantity) {
 
     repeatedCoordinates := []
     Coordinates := []
-    
+
     repeatedcoordinates.push([100, 340])
     repeatedcoordinates.push([380, 712])
     repeatedcoordinates.push([182, 342])
     repeatedcoordinates.push([284, 553])
-    
+
     Coordinates.push([68, 229]) ; 1
     Coordinates.push([135, 219]) ; 2
     Coordinates.push([212, 229]) ; 3
-    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([287, 219]) ; 4
     Coordinates.push([68, 271]) ; 5
     Coordinates.push([135, 279]) ; 6
     Coordinates.push([212, 279]) ; 7
@@ -259,17 +262,17 @@ RunFunction2(dropdownPosition, dropdownQuantity) {
         y := coordinates[dropdownPosition][2]
         Send, {Click %x%, %y%} ;
         Sleep, speed
-            Loop, % repeatedCoordinates.MaxIndex()
-                {
-                ; Access the x and y coordinates relative to the active window
-                x := repeatedCoordinates[A_Index][1]
-                y := repeatedCoordinates[A_Index][2]
-                Send, {Click %x%, %y%} ;
-                Sleep, speed
-                }
+        Loop, % repeatedCoordinates.MaxIndex()
+        {
+            ; Access the x and y coordinates relative to the active window
+            x := repeatedCoordinates[A_Index][1]
+            y := repeatedCoordinates[A_Index][2]
+            Send, {Click %x%, %y%} ;
+            Sleep, speed
+        }
         ClickSpam()
         Sleep, speed
-        Send, {Click 400, 100} ; 
+        Send, {Click 400, 100} ;
         Sleep, speed
         dropdownPosition++
     }
@@ -280,35 +283,35 @@ RunFunction2(dropdownPosition, dropdownQuantity) {
 ClickSpam() {
     Loop, 130 {
         Click
-        Sleep, 15  ; 
+        Sleep, 15  ;
     }
 }
 
 RightClickSpam() {
     Loop, 130 {
-        Click, Right  ; 
-        Sleep, 15      ; 
+        Click, Right  ;
+        Sleep, 15      ;
     }
 }
 
 RunFunction3(dropdownPosition, dropdownQuantity) {
-   speed := 500 ; Default speed in milliseconds
+    speed := 500 ; Default speed in milliseconds
     Coordinates := []
 
     Coordinates.push([68, 229]) ; 1
     Coordinates.push([135, 219]) ; 2
     Coordinates.push([212, 229]) ; 3
-    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([287, 219]) ; 4
     Coordinates.push([68, 271]) ; 5
     Coordinates.push([135, 279]) ; 6
     Coordinates.push([212, 279]) ; 7
     Coordinates.push([276, 270]) ; 8
-    
+
     x := coordinates[dropdownPosition][1]
     y := coordinates[dropdownPosition][2]
     x2 := coordinates[dropdownPosition+1][1]
     y2 := coordinates[dropdownPosition+1][2]
-    
+
     Send, {Click %x%, %y% ;
     Sleep, speed
     Send, {Click 90, 340} ;
@@ -320,28 +323,28 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
     MouseClickDrag, left, 360, 210, 715, 210
     Sleep, speed
     Loop, %dropdownQuantity%
-    {  
-    MouseClickDrag, left, %x%, %y%, 400, 300
-    Sleep, speed
-    Send, {Click 400, 300} ;
-    Sleep, speed    
-    MouseClickDrag, left, %x2%, %y2%, 580, 300
-    Sleep, speed
-    Send, {Click 580, 300} ;
-    Sleep, speed
-    MouseMove, 984, 764
-    Sleep, speed
-    Loop, 10 {
-        Click, Right    ; 
-        Sleep, 15   ; 
-    }
-    Loop, 6 {
-        MouseClick, Left, 690, 760
+    {
+        MouseClickDrag, left, %x%, %y%, 400, 300
         Sleep, speed
-    }
-    Sleep, 500 ;
-    Send, {Click 234, 173} ;
-    Sleep, speed
+        Send, {Click 400, 300} ;
+        Sleep, speed
+        MouseClickDrag, left, %x2%, %y2%, 580, 300
+        Sleep, speed
+        Send, {Click 580, 300} ;
+        Sleep, speed
+        MouseMove, 984, 764
+        Sleep, speed
+        Loop, 10 {
+            Click, Right    ;
+            Sleep, 15   ;
+        }
+        Loop, 6 {
+            MouseClick, Left, 690, 760
+            Sleep, speed
+        }
+        Sleep, 500 ;
+        Send, {Click 234, 173} ;
+        Sleep, speed
     }
     Send, {Click 234, 173} ;
     Sleep, speed
@@ -356,7 +359,7 @@ RunFunction4() {
 }
 
 RunFunction5() {
-      ClickSpam()
+    ClickSpam()
 }
 
 RunFunction6() {
@@ -366,8 +369,8 @@ RunFunction6() {
     MouseMove, 940, 760
     Sleep, speed
     Loop, 10 {
-        Click, Right    ; 
-        Sleep, 15   ; 
+        Click, Right    ;
+        Sleep, 15   ;
     }
     Loop, 6 {
         MouseClick, Left, 400, 760
@@ -376,24 +379,24 @@ RunFunction6() {
 }
 
 RunFunction7(dropdownPosition="", dropdownQuantity="") {
-    
+
     Coordinates := []
-    
+
     Coordinates.push([68, 229]) ; 1
     Coordinates.push([135, 219]) ; 2
     Coordinates.push([212, 229]) ; 3
-    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([287, 219]) ; 4
     Coordinates.push([68, 271]) ; 5
     Coordinates.push([135, 279]) ; 6
     Coordinates.push([212, 279]) ; 7
     Coordinates.push([276, 270]) ; 8
 
     if(dropdownPosition = "") {
-       InitialPosition := 1
+        InitialPosition := 1
     }Else{
         InitialPosition := dropdownPosition
     }
-    
+
     x := coordinates[InitialPosition][1]
     y := coordinates[InitialPosition][2]
 
@@ -405,44 +408,43 @@ RunFunction7(dropdownPosition="", dropdownQuantity="") {
     coords := SearchImage(b64ImageMinoEgg)
 
     if (coords) {
-     MouseMove, coords.x, coords.y
+        MouseMove, coords.x, coords.y
     } else {
-     MsgBox "No coordinates found."
-    }    
+        MsgBox "No coordinates found."
+    }
 
-   ; Make sure Capture2Text is configured
-if (capture2TextPath = "") {
-    MsgBox, Please select the Capture2Text path first.
-    Return
+    ; Make sure Capture2Text is configured
+    if (capture2TextPath = "") {
+        MsgBox, Please select the Capture2Text path first.
+        Return
+    }
+
+    ; Configure coordinates relative to the active window
+    CoordMode, Pixel, Window
+    CoordMode, Mouse, Window
+
+    ; Coordinates relative to the window
+    x_start := 618
+    y_start := 217
+    x_end := 653
+    y_end := 232
+
+    ; Get the position of the active window
+    WinGetPos, winX, winY, winWidth, winHeight, A
+
+    ; Convert the coordinates to screen-relative
+    abs_x_start := winX + x_start
+    abs_y_start := winY + y_start
+    abs_x_end := winX + x_end
+    abs_y_end := winY + y_end
+
+    ; Run Capture2Text with the adjusted coordinates
+    RunWait, %capture2TextPath% %abs_x_start% %abs_y_start% %abs_x_end% %abs_y_end%
+    savvyValue := clipboard
+
+    MsgBox, %savvyValue%
+
 }
-
-; Configure coordinates relative to the active window
-CoordMode, Pixel, Window
-CoordMode, Mouse, Window
-
-; Coordinates relative to the window
-x_start := 618
-y_start := 217
-x_end := 653
-y_end := 232
-
-; Get the position of the active window
-WinGetPos, winX, winY, winWidth, winHeight, A
-
-; Convert the coordinates to screen-relative
-abs_x_start := winX + x_start
-abs_y_start := winY + y_start
-abs_x_end := winX + x_end
-abs_y_end := winY + y_end
-
-; Run Capture2Text with the adjusted coordinates
-RunWait, %capture2TextPath% %abs_x_start% %abs_y_start% %abs_x_end% %abs_y_end%
-savvyValue := clipboard
-
-MsgBox, %savvyValue%
-
-}
-
 
 SearchImage(b64Code) {
     image := "HBITMAP:*" . b64ToPng(b64Code)
@@ -455,29 +457,28 @@ SearchImage(b64Code) {
     Loop {
         ; Perform the image search
         ImageSearch, FoundX, FoundY, 700, 200, 1000, 780, %image%
-        
+
         ; If the image is found, exit the loop
         if (ErrorLevel == 0) {
             return {x: FoundX, y: FoundY} ; Return coordinates as an object
         }
-        
+
         ; If not found, wait for a moment and try again
         Sleep, 500 ; Wait half a second before trying again
     }
 }
 
-
 b64ToPng(B64, NewHandle := False) {
     Static hBitmap := 0
     If (NewHandle)
-       hBitmap := 0
+        hBitmap := 0
     If (hBitmap)
-       Return hBitmap
+        Return hBitmap
     If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", 0, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
-       Return False
+        Return False
     VarSetCapacity(Dec, DecLen, 0)
     If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", &Dec, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
-       Return False
+        Return False
     ; Bitmap creation adopted from "How to convert Image data (JPEG/PNG/GIF) to hBITMAP?" by SKAN
     ; -> http://www.autohotkey.com/board/topic/21213-how-to-convert-image-data-jpegpnggif-to-hbitmap/?p=139257
     hData := DllCall("Kernel32.dll\GlobalAlloc", "UInt", 2, "UPtr", DecLen, "UPtr")
@@ -497,8 +498,6 @@ b64ToPng(B64, NewHandle := False) {
     Return hBitmap
 }
 
-
-
 RunFunction8(dropdownPosition, dropdownQuantity) {
     speed := 500 ;
     Coordinates := []
@@ -507,12 +506,12 @@ RunFunction8(dropdownPosition, dropdownQuantity) {
     Coordinates.push([68, 229]) ; 1
     Coordinates.push([135, 219]) ; 2
     Coordinates.push([212, 229]) ; 3
-    Coordinates.push([287, 219]) ; 4 
+    Coordinates.push([287, 219]) ; 4
     Coordinates.push([68, 271]) ; 5
     Coordinates.push([135, 279]) ; 6
     Coordinates.push([212, 279]) ; 7
     Coordinates.push([276, 270]) ; 8
-    
+
     repeatedCoordinates.push([91, 339]) ; Carry
     repeatedCoordinates.push([540, 390]) ; Pet Manager
     repeatedCoordinates.push([540, 390]) ; Pet Manager
@@ -530,15 +529,14 @@ RunFunction8(dropdownPosition, dropdownQuantity) {
         y := Coordinates[dropdownPosition][2]
         Click, %x%, %y%
         Sleep, speed
-            Loop, % repeatedCoordinates.MaxIndex() {
-                x2 := repeatedCoordinates[A_Index][1]
-                y2 := repeatedCoordinates[A_Index][2]
-                Click, %x2%, %y2%
-                Sleep, speed
-            }
+        Loop, % repeatedCoordinates.MaxIndex() {
+            x2 := repeatedCoordinates[A_Index][1]
+            y2 := repeatedCoordinates[A_Index][2]
+            Click, %x2%, %y2%
+            Sleep, speed
+        }
     }
 }
-
 
 RunFunction9() {
     MouseMove, 60, 60
@@ -561,7 +559,6 @@ RunFunction9() {
         Sleep, 100
     }
 }
-
 
 RunFunction10(){
     MsgBox, toBeDone
@@ -586,9 +583,4 @@ RunFunction14(){
 RunFunction15(){
     MsgBox, toBeDone
 }
-
-
-
-
-
 
