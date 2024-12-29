@@ -312,7 +312,10 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
     x2 := coordinates[dropdownPosition+1][1]
     y2 := coordinates[dropdownPosition+1][2]
 
-    Send, {Click %x%, %y% ;
+    b64ImageMergedSpirit:= "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAN8SURBVEhLvdJdaBRXGMbxgbiwEJDBiHWriB+9yFpKWEwUJKsoBDHghUtaREhRQmhg0RZWhWXwwrD4EYKQsKigJiDEomJCCy2lNOIH6UXBRRqMeLMgLVtytTeBgRh4fJ8zc86eyWTrnRd/zmEY5nfewzjl8TJ0d25Em5uIVpuO9ljesfvlI5Wvj6K7owOu4+CTw0Pf9gdwabgEXbnomX4uFlAb8VC/e8HkT3jwZ2Rlsq9dL0W7Ic+sFsZL+P2yp5qU743Kd5lDeMwrgq0FK2zmh6ZwfaKoQK5q3wQmGoMnz50FI26jr4p5A2tcwX/n4T/jswvAkwH402cjcPVqwaTR0pm8KgI/PjMAHUGDFgfUVeO5QBrmpCGqVkFtXE3p5VGRbzEbjcEL53PQ1b8/GAnjvcB0TxD3t+UZuyx7yR+V/TTfCfbVwZzqad8R1ezgSdXDE8dws/cgvOM5Ver/YP9Wd4Cxv8JDEP2pMwZzrec7I+i9w90K1GgMnuzphq7Wc7iBPt8P/GdFnKhODkFQo7WjaQOWMpmgbMagMbj0lbwgrYYVzismqPE/01FcptUoi6BN4JN79wWwt2sbpnZvQSWTwkLYv6c2qXDRBSbbgGey/ycF1MNeyrNH64FfXSxdcbF4wkW13cVM+ybT2NY2/NixA3PZtFpZuSutym1Y34BZDNagTsMaD+H5dFsEJsqV6LWdKVUM1tOuhvFEprVRpiflasFEGcGC66q4J5jf6Bq8sGuLKsOr1vDqq1YwJ9bxyomOJIPCq9bXzCpdKYM3gzmtgkubk5hrD6p+EbR4KAEUHfmxBNcN85mA7LtgvzyUgN+VNM3vSWDWTZpeZFoxtdk1DX6eUO1PhvDU9qAYTOx+axD3BFlfC3DIWRO2I2w39mVrHF49scL7Q5wrC0EbXrndouJ+8ZsWg3L/7mgi0mw2mFrBGq1lGiBb6peP2ygjakUMFdlLxHlLBJm6sdNOc7iSdcDmc/Li19H8Y9GqXUGLfQ6WCvLOiDQjyGs5gKz+sBzmgUwvcV8fb/TbkIM72SSGdidUDsG38rB6UU59Va4ujPCyJx+R1oIhHzNo2MqrRsRt+NIBx6Cdn7XAIahb/qMVft1Vqw3rFGZH+L385Tpf/vRwYg1zUqK9G50AXCfXzGyYkxLW4U0SKw/k9CHM69UpmJM2gXnVNsoMus7BBx49Qr8vtt9iAAAAAElFTkSuQmCC"
+    MergedSpiritCoords := SearchImage(b64ImageMergedSpirit, 750, 280, 1020, 780)
+
+    Send, {Click %x%, %y%} ;
     Sleep, speed
     Send, {Click 90, 340} ;
     Sleep, speed
@@ -324,6 +327,10 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
     Sleep, speed
     Loop, %dropdownQuantity%
     {
+        if(MergedSpiritCoords == "") {
+            MsgBox, No Merged Spirit found
+            break
+        }
         MouseClickDrag, left, %x%, %y%, 400, 300
         Sleep, speed
         Send, {Click 400, 300} ;
@@ -332,7 +339,7 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
         Sleep, speed
         Send, {Click 580, 300} ;
         Sleep, speed
-        MouseMove, 984, 764
+        MouseMove, MergedSpiritCoords.x, MergedSpiritCoords.y
         Sleep, speed
         Loop, 10 {
             Click, Right    ;
@@ -345,6 +352,10 @@ RunFunction3(dropdownPosition, dropdownQuantity) {
         Sleep, 500 ;
         Send, {Click 234, 173} ;
         Sleep, speed
+        MergedSpiritCoords := SearchImage(b64ImageMergedSpirit, 750, 280, 1020, 780)
+    }
+    if(MergedSpiritCoords == "") {
+        return
     }
     Send, {Click 234, 173} ;
     Sleep, speed
@@ -366,7 +377,13 @@ RunFunction6() {
     speed := 500 ;
     Send, {Click 235, 145} ;
     Sleep, speed
-    MouseMove, 940, 760
+    b64ImageRebirthSpirit:= "iVBORw0KGgoAAAANSUhEUgAAACEAAAAWCAYAAABOm/V6AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQgSURBVEhLndZhaBt1GMfxP8ziQSEECoNQkRVkGPBNfLHQUBkWajFY2QKFWtYxiAHLaamcFsPRQsoxWBsm1IBQasXCBmspskIHytoXaodTFuosjFKUCWNFmOTFhEgrPD6/5/L/5+6aOZTw5X8LXZ/PnrtmVeXLZarMVcLNR7oRbuHeQqjKVX7/P+TxzKELI6SeUX7upEvudLiJykQo72uPpu5MScX7RfLuelS6z3/+w7/2NsNNfFcK5THc/eISObNTkjdTlpSy/Foh5D1OIzDceewIQCMAQMAUH/D1T4xq5N7zpP+FcGacI4jxlXEZDISGYLh7yF/byKn7AYOCgPHrjGoA7A8dqSUCw/Pzecmes80GALC/sc0mNCIICCI0BAgMtxddKQhAQ+cuSAaRm85Rz2QP5TZzpv7VPqlv+7SU++uMZB8UyDt0qcQYNLafp+G9HNm/OFRuvHCdu2pL/bN5aZgfRDTgXqTT75QoV3AlZSX8gOhf7D+C0IDexxmD0JAnIXBmbw6HAD3jwzJcA/4VgW3osjNZA0CZug/Rm+AfMhMwGK4ByfleMzw1mJMwOIpIvzbcRKTPpyk1kjIBoTcRRQAQRSC9BQBQEODnGkBLRKaQoeeHuqROp4sSl7lPElLqNsMQvwqUp3keiepUk6q0TSBVaJUKOxVKX3PJmszT8beLpo43xyj53rrUdW5JSr51RYq9yB9Y8Qypk28kQwicakS1RFRpS9KIK7QmPQkBAE4AEtmPpShCIB0vJ6jrFX84tiDbCGwiy68oAoOxAYRtaAQACMNRvNu/xvB4t2sgna+WJGyhJSJ6O4DALdAQXAcR+nboLaBE0XsqQt8KOa3ufrL6MmSd5/OjQUlNpqTYtT5Kks2MZulHNvXuO9JL21NyJncekHVx1RQr/kzq9Q1T7N1dsga2TO2nJiTruaykrMExH6EhXBDRuTMkg4MQDNcd/+oSJVa/l4KIUIzQARE7s/QURGQT6IVdfwM4EQarpYo5sYnMIckJTOfy7yFEx+wjEyDx0WoE8T4/UI0NyO2Yy5vhehMYHL/VDIODaYSGAKFL7hEllskAcB5BqNHP+V+93uz6b6TW+OSO3apK8RsbpsTiAlmjZWorr9GxL3dJ3SWy9on66v6J2vf+NrVtHvD3qoVKnK1Q/FRBTtREfPqjD/ihLoOtGlHb3kPBWNVfJQAQAFHESf76VggUQkxvGYROqRl+gjWggQBAIwTEAIUBDQwGB9PDWyHMJni4OrtA6oRDVme6+d+4pBEBiN6EDgCNwC3BBnRRRJ6I4nxrDGCpHgJIIQDij1RV2KC2D76l+Bzff05Ns3ydqzbih0u6yav97IDaV3hIo9htfh9QLvUn8QcXP4i1GsXv1Mha4b87ww0sk8KHku7ZGA/mX3AlRf8A3aK4HFvMm0oAAAAASUVORK5CYII="
+    RebirthSpiritCoords := SearchImage(b64ImageRebirthSpirit, 750, 280, 1020, 780)
+    MouseMove, RebirthSpiritCoords.x, RebirthSpiritCoords.y
+    if(MergedSpiritCoords == "") {
+        MsgBox, No Merged Spirit found
+        return
+    }
     Sleep, speed
     Loop, 10 {
         Click, Right    ;
@@ -379,7 +396,7 @@ RunFunction6() {
 }
 
 RunFunction7(dropdownPosition="", dropdownQuantity="") {
-
+    speed := 600 ;
     Coordinates := []
 
     Coordinates.push([68, 229]) ; 1
@@ -391,6 +408,18 @@ RunFunction7(dropdownPosition="", dropdownQuantity="") {
     Coordinates.push([212, 279]) ; 7
     Coordinates.push([276, 270]) ; 8
 
+    RepeatedCoordinates := []
+
+    RepeatedCoordinates.Push([540,360]) ; petmanager
+    RepeatedCoordinates.Push([540,360]) ; petmanager
+    RepeatedCoordinates.Push([540,360]) ; petmanager
+    RepeatedCoordinates.Push([150,380]) ; Reset Pet's Points
+    RepeatedCoordinates.Push([450,390]) ; Move pet window to the front
+    RepeatedCoordinates.Push([440,250]) ; Reset Growth Rate Randomly
+    RepeatedCoordinates.Push([850,400]) ; OK
+    RepeatedCoordinates.Push([440,330]) ; Reset
+    RepeatedCoordinates.Push([850,400]) ; OK
+
     if(dropdownPosition = "") {
         InitialPosition := 1
     }Else{
@@ -400,102 +429,107 @@ RunFunction7(dropdownPosition="", dropdownQuantity="") {
     x := coordinates[InitialPosition][1]
     y := coordinates[InitialPosition][2]
 
-    if(dropdownQuantity != "") {
-        Quantity := dropdownQuantity
+    ; Make sure Capture2Text is configured
+    while(capture2TextPath = ""){
+        MsgBox, Please select the Capture2Text path first and re run the code.
+        return
     }
 
     b64ImageMinoEgg:= "iVBORw0KGgoAAAANSUhEUgAAABMAAAARCAYAAAA/mJfHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHSSURBVDhPhdAxSBtRHMfxAw0EBHEqSidHx04FoUNdpI4BQQSXhk6BLqKL7VQJFboJKQg6RGpAsGIkSqWKCIougcbSDlqdLN0yWAhI4Ofv99698z2NOny4u3d33/u/i6bGBlD6OIJGLQvU93F1Om3gdNK6KHK9ClyeWX/yRqOaNY7XxvBpIoOZ10OIFMI5X2ZIFDXh2pCl4O1YbTSJyersCHKvBhAdr78NYpoqiLnJ/pWtFjFNV3qXQWRC1Lz4Eki26MTbaxWT/cIoYyfjMGq5UPwR4+cb4AendU6mgN98x1Pf4D9T6OowA2z3hxRwjgaBQ27ZuS+m0P/KM6DcexPS+U5fGNvhM6KYplPkaDhxN+ZTTBHHn0y+Pwe+9iTsNvd4sZIGljtD6x3AAaMJxp3dp3ymK1AvdMWxTS0wUORRdL79JKSA8433F/kxj40ppOAWpyvzhujcRTThcsR1UsRRZD6VuImJAr7HYtqeQgWuk41t8cJZo1JshTYesBSq5P2YQgueOVqkViG5FRt/kbKxZoULfsjFWgW1rTx5oep0GzLdkY019E/ui4nbsguRAi6Ue5mOYwpRky/58NmjZ+Ipfn1oM/6+TxvF4RR62iNkuyNcAzoEov6dEnO4AAAAAElFTkSuQmCC"
-    coords := SearchImage(b64ImageMinoEgg)
+    MinoEggscoords := SearchImage(b64ImageMinoEgg, 750, 280, 1020, 780)
+    b64ImageSealJade:= "iVBORw0KGgoAAAANSUhEUgAAACEAAAAZCAYAAAC/zUevAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQISURBVEhLxdbRa1tlGMfxQC1EqjNQyBZXyiIlWBiUsKos6IWRUBsIzEKgBgodMbBxLHQcGwhHqq0huHpYXT04GFmFlKyskg0qURHihVCRVUIdGCmFOJgUQWQX/gGPz/Mm75v3OU0oeqEXH1rSNr9v36Ynx+P1eoFkMhlwPnWU4nqRKbuVykzltstWb4vvZiE4FFBEhLPWGf8vIki5VITEZKwVkXkLT+B/isgtzLcirOU8EHvF5q5xIlRTpFDdzWNguM6h50TBM1rEktv7SwpFFAoFZvVDzl7poNHr9lXGca5zvSKyOavDzCoUQsO5XE5ZsjgLH5MopPDeImN/hIGarhHGFZPLGNwcZ7oYlzkLn0OXX7YYFpHGgZY0k7o4q8QTCZh6Y4qbSTOpyyYTx++RZufmYfZiCswFDHYRL0wZMZVMMjSs0wMuXZkH84OC4NzZEqxrDkPDekgiERchEouYmLwAhIajsQklcj6iUAQNL66tKnJcKm5XGft2BbIrqypGPpeMmZ6+ILAIOR5+ISLoAcaCCc52hanW60ztl4YiI/QQGtdDWETklSiQ0efDTCQWh/Q7WbA3SlB9UIdKfUeo7e9B/bcDqD9qCI3fm9D88xAO/jiEvUdN2DloCKWvtoXCrc/AWLYh/qYJYy9GITgyKkRfjQiBU+2Is2PjLMDA/xY5Lqlx1Hx8KIYP/3qsPlKEHlJ7sHMk4uXXUypi/NxYJ4IC9AgRcBePWwsgaryNhruRIb0i5GnQOIWoiOHnQiIgnkyJgG4ReoCAJyC5Q3pFUIAeEQqNtCLoAf/JAIRjU5B824TcJ3id/6YKWz/i35+Ota2Bv6Gu6aYF/vBwH5zvapD/4h6Y5RKk8b0lPmfB6EsxITCEm4OD4kJFHz2nh4Pg8/mORNyotUJkzM6v+8dG0Pj2T7vCP4qgU+gWkb9bFiEyhiL0kN2HB4wcL+I4kQG9InxP+eD0s/5WBAW4IwhFyBCKKH9fw9fGror5+uc9oXwfv4bkuDuCAo6NGHjGB2TstaSQMHJgrBVhfrOkWHhxKlTxIvVtVcl/WRGse5st+GLWpUs43jb98VUIT6Zh5FwM/MMhcTtJAvjLDz59ohXR/6QXfENhFpG5dYOF5D4vMwbeGTEbnB6QwLfybhEUcGJgADwU4HnCoyJkCEXojoy6pNedTgB+LgNIdM5UEXqAiqCTkBH6aaTW7H8VIQKQDKBTkBH6KRAKEH8O30m/iPB4MORUEILhqPiBiYVFSOELSlnPM+mSrcyW8zBzJwvTGzmYWreE+E28p0DjRlIIno/CwCBu4Q7p6+uD/v5+EeMJnMHrBIW0vyhDxpOXeIgrYmbTElJbeBODKEIGUIw7wh86qzZkBPF6vfA3T3rir3x79SQAAAAASUVORK5CYII="
+    SealJadecoords := SearchImage(b64ImageSealJade, 750, 280, 1020, 780)
+    b64ImageRedFeather := "iVBORw0KGgoAAAANSUhEUgAAABkAAAASCAYAAACuLnWgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALHSURBVEhLhZRPSBRhGMa/2VIjNmlJtwzMqEMHCfYSSxAsgtAeOhhBBUGpHVbZ1DYjChYvHcRD3gIVligK6hLYRSS8bQePgl0C8SJ48bBEFw/x9Dzfzjsz/sFgf7wfszPPb953vhm3nHeoX4/ZLcX86nfYuetQu+aA2SK2bzcrZnMxqwvAOx4T3weBqRx2h3jefA9KJx0ep4/B1a4wJGRrIA6vM9jARFsYXmwKn2Sagq8MlUThQqIHPV4gFnsdPvdSMn3eYfJ0k+XLDo0CA8nmVYcP3Q7lDEOHGCjmgU1euH6pCW5lgWoFeM7wOUoGeI7qDCVkp8hJEFdKxxJhEkOSMttWeCRTsDDJUrUpMFlCUu0MJeMtMeomKfEiSgwv+4K9WLhkrAo3ycjxcFxJidCYNC6TKNiQyMYVjU0S64bYmMaCUILXnPONNlRSLmKcvM06/Olr8zRyfNDDDDIG7mG9o8ejNT6uAPc5NqOUwxY3knMOQRDANQpdwDPuEFI9E0sMyUzy+9FNv94j+AnsnssfLXnRzjGwExNprbvHy4WDnczxHFYvmP/kBVrXAv7/P4k6EBKYxESeH3y4SRhuAi/UuJIj2y8ZPaGHnY+otQ9iMZ3DbGveV/G3txyBVQrWgO3uUygzBK94bIQs8bjQup8bgFzk/xeSknLQFTGZKnhKQdHXWirnMYkJVCX0wVqbiILNs5wMGU5RogedFAiFmyApkUAiExyQqIadSDDC7LUsJWppzPGFO0RiWAeqkkUCjSqUrPOd8CIigUSS+E4k6dvHdAd31p2VCHwDVjqLGHcZX/U5qStInxVthCl+Lzl2o85PkTHZyg1QyWxgNJ2NqBUqXoL3GwB/qibAQx4XJnnDnbRPMsib1I0/ZWeqwo22FA9IkgIJJTEkkeAwiQQmMZq7KyGRoDHDiyhQuGEd2LgiicYl0ZGSAP8Agwjs+7qKCK4AAAAASUVORK5CYII="
+    RedFeathercoords := SearchImage(b64ImageRedFeather, 750, 280, 1020, 780)
 
-    if (coords) {
-        MouseMove, coords.x, coords.y
-    } else {
-        MsgBox "No coordinates found."
+    if ( (RedFeathercoords == "") || (SealJadecoords == "") || (MinoEggscoords == "")) {
+        Click, 970, 240
+        Sleep, speed
+        Click, 970, 240
+        Sleep, speed
+        Click, 790, 760
+        Sleep, speed
     }
 
-    ; Make sure Capture2Text is configured
-    if (capture2TextPath = "") {
-        MsgBox, Please select the Capture2Text path first.
-        Return
+    MinoEggscoords := SearchImage(b64ImageMinoEgg, 750, 280, 1020, 780)
+    SealJadecoords := SearchImage(b64ImageSealJade, 750, 280, 1020, 780)
+    RedFeathercoords := SearchImage(b64ImageRedFeather, 750, 280, 1020, 780)
+
+    if ( (RedFeathercoords == "") || (SealJadecoords == "") || (MinoEggscoords == "")) {
+        Click, 780,710
+        Sleep, speed
     }
 
-    ; Configure coordinates relative to the active window
-    CoordMode, Pixel, Window
-    CoordMode, Mouse, Window
+    MinoEggscoords := SearchImage(b64ImageMinoEgg, 750, 280, 1020, 780)
+    SealJadecoords := SearchImage(b64ImageSealJade, 750, 280, 1020, 780)
+    RedFeathercoords := SearchImage(b64ImageRedFeather, 750, 280, 1020, 780)
 
-    ; Coordinates relative to the window
-    x_start := 618
-    y_start := 217
-    x_end := 653
-    y_end := 232
+    if (MinoEggscoords == "") {
+        MsgBox, No more Eggs
+        return
+    }
+    if (SealJadecoords == "") {
+        MsgBox, No more Seal Jade
+        return
+    }
+    if (RedFeathercoords == "") {
+        MsgBox, No more RedFeathers
+        return
+    }
 
-    ; Get the position of the active window
-    WinGetPos, winX, winY, winWidth, winHeight, A
-
-    ; Convert the coordinates to screen-relative
-    abs_x_start := winX + x_start
-    abs_y_start := winY + y_start
-    abs_x_end := winX + x_end
-    abs_y_end := winY + y_end
-
-    ; Run Capture2Text with the adjusted coordinates
-    RunWait, %capture2TextPath% %abs_x_start% %abs_y_start% %abs_x_end% %abs_y_end%
-    savvyValue := clipboard
-
-    MsgBox, %savvyValue%
-
-}
-
-SearchImage(b64Code) {
-    image := "HBITMAP:*" . b64ToPng(b64Code)
-    FoundX := ""
-    FoundY := ""
-    CoordMode, Pixel, Window ; Set coordinate mode for ImageSearch
-    ErrorLevel := 0 ; Reset ErrorLevel before running the command
-
-    ; Try searching for the image until it's found
-    Loop {
-        ; Perform the image search
-        ImageSearch, FoundX, FoundY, 700, 200, 1000, 780, %image%
-
-        ; If the image is found, exit the loop
-        if (ErrorLevel == 0) {
-            return {x: FoundX, y: FoundY} ; Return coordinates as an object
+    while((RedFeathercoords != "") && (SealJadecoords != "") && (MinoEggscoords != "")){
+        MouseMove, MinoEggscoords.x, MinoEggscoords.y
+        sleep, speed
+        Click, Right
+        Loop, % RepeatedCoordinates.MaxIndex()
+        {
+            ; Access the x and y coordinates relative to the active window
+            x := RepeatedCoordinates[A_Index][1]
+            y := RepeatedCoordinates[A_Index][2]
+            Send, {Click %x%, %y%} ;
+            Sleep, speed
+        }
+        savvyValue := capture2Text(618, 217, 653, 232)
+        savvyValue := savvyValue + 0
+        sleep, speed
+        if (savvyValue >= 1) {
+            ; Keep just the decimals
+            savvyValue := Mod(savvyValue, 1)
         }
 
-        ; If not found, wait for a moment and try again
-        Sleep, 500 ; Wait half a second before trying again
-    }
-}
+        while (savvyValue < 0.84) {
+            Click, 860, 250 ; Reset savvy
+            sleep, speed
+            savvyValue := capture2Text(618, 217, 653, 232)
+            savvyValue := savvyValue + 0
+            sleep, speed
+            if (savvyValue >= 1) {
+                ; Keep just the decimals
+                savvyValue := Mod(savvyValue, 1)
+            }
+        }
 
-b64ToPng(B64, NewHandle := False) {
-    Static hBitmap := 0
-    If (NewHandle)
-        hBitmap := 0
-    If (hBitmap)
-        Return hBitmap
-    If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", 0, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
-        Return False
-    VarSetCapacity(Dec, DecLen, 0)
-    If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", &Dec, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
-        Return False
-    ; Bitmap creation adopted from "How to convert Image data (JPEG/PNG/GIF) to hBITMAP?" by SKAN
-    ; -> http://www.autohotkey.com/board/topic/21213-how-to-convert-image-data-jpegpnggif-to-hbitmap/?p=139257
-    hData := DllCall("Kernel32.dll\GlobalAlloc", "UInt", 2, "UPtr", DecLen, "UPtr")
-    pData := DllCall("Kernel32.dll\GlobalLock", "Ptr", hData, "UPtr")
-    DllCall("Kernel32.dll\RtlMoveMemory", "Ptr", pData, "Ptr", &Dec, "UPtr", DecLen)
-    DllCall("Kernel32.dll\GlobalUnlock", "Ptr", hData)
-    DllCall("Ole32.dll\CreateStreamOnHGlobal", "Ptr", hData, "Int", True, "PtrP", pStream)
-    hGdip := DllCall("Kernel32.dll\LoadLibrary", "Str", "Gdiplus.dll", "UPtr")
-    VarSetCapacity(SI, 16, 0), NumPut(1, SI, 0, "UChar")
-    DllCall("Gdiplus.dll\GdiplusStartup", "PtrP", pToken, "Ptr", &SI, "Ptr", 0)
-    DllCall("Gdiplus.dll\GdipCreateBitmapFromStream",  "Ptr", pStream, "PtrP", pBitmap)
-    DllCall("Gdiplus.dll\GdipCreateHBITMAPFromBitmap", "Ptr", pBitmap, "PtrP", hBitmap, "UInt", 0)
-    DllCall("Gdiplus.dll\GdipDisposeImage", "Ptr", pBitmap)
-    DllCall("Gdiplus.dll\GdiplusShutdown", "Ptr", pToken)
-    DllCall("Kernel32.dll\FreeLibrary", "Ptr", hGdip)
-    DllCall(NumGet(NumGet(pStream + 0, 0, "UPtr") + (A_PtrSize * 2), 0, "UPtr"), "Ptr", pStream)
-    Return hBitmap
+        Click, 850, 400 ; OK
+        MinoEggscoords := SearchImage(b64ImageMinoEgg, 750, 280, 1020, 780)
+        SealJadecoords := SearchImage(b64ImageSealJade, 750, 280, 1020, 780)
+        RedFeathercoords := SearchImage(b64ImageRedFeather, 750, 280, 1020, 780)
+        sleep, 1500
+        RunFunction8(1,1)
+    }
+
+    if (MinoEggscoords == "") {
+        MsgBox, No more Eggs
+        return
+    }
+    if (SealJadecoords == "") {
+        MsgBox, No more Seal Jade
+        return
+    }
+    if (RedFeathercoords == "") {
+        MsgBox, No more RedFeathers
+        return
+    }
+
 }
 
 RunFunction8(dropdownPosition, dropdownQuantity) {
@@ -513,9 +547,9 @@ RunFunction8(dropdownPosition, dropdownQuantity) {
     Coordinates.push([276, 270]) ; 8
 
     repeatedCoordinates.push([91, 339]) ; Carry
-    repeatedCoordinates.push([540, 390]) ; Pet Manager
-    repeatedCoordinates.push([540, 390]) ; Pet Manager
-    repeatedCoordinates.push([540, 390]) ; Pet Manager
+    repeatedCoordinates.push([540, 370]) ; Pet Manager
+    repeatedCoordinates.push([540, 370]) ; Pet Manager
+    repeatedCoordinates.push([540, 370]) ; Pet Manager
     repeatedCoordinates.push([148, 359]) ; Pet Raising
     repeatedCoordinates.push([440, 400]) ; Pet window
     repeatedCoordinates.push([440, 320]) ; Seal spirit
@@ -584,3 +618,81 @@ RunFunction15(){
     MsgBox, toBeDone
 }
 
+SearchImage(b64Code, x1, y1, x2, y2) {
+    image := "HBITMAP:*" . b64ToPng(b64Code)
+    FoundX := ""
+    FoundY := ""
+    CoordMode, Pixel, Window ; Set coordinate mode for ImageSearch
+    ErrorLevel := 0 ; Reset ErrorLevel before running the command
+
+    ; Try searching for the image until it's found
+    Loop,20 {
+        ; Perform the image search
+        ImageSearch, FoundX, FoundY, %x1%, %y1%, %x2%, %y2%, *50 %image%
+
+        ; If the image is found, exit the loop
+        if (ErrorLevel == 0) {
+            return {x: FoundX, y: FoundY} ; Return coordinates as an object
+        }
+
+        ; If not found, wait for a moment and try again
+        Sleep, 5 ; Wait half a second before trying again
+    }
+}
+
+b64ToPng(B64) {
+    hBitmap := 0
+
+    If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", 0, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
+        Return False
+
+    VarSetCapacity(Dec, DecLen, 0)
+    If !DllCall("Crypt32.dll\CryptStringToBinary", "Ptr", &B64, "UInt", 0, "UInt", 0x01, "Ptr", &Dec, "UIntP", DecLen, "Ptr", 0, "Ptr", 0)
+        Return False
+
+    ; Bitmap creation adopted from "How to convert Image data (JPEG/PNG/GIF) to hBITMAP?" by SKAN
+    ; -> http://www.autohotkey.com/board/topic/21213-how-to-convert-image-data-jpegpnggif-to-hbitmap/?p=139257
+    hData := DllCall("Kernel32.dll\GlobalAlloc", "UInt", 2, "UPtr", DecLen, "UPtr")
+    pData := DllCall("Kernel32.dll\GlobalLock", "Ptr", hData, "UPtr")
+    DllCall("Kernel32.dll\RtlMoveMemory", "Ptr", pData, "Ptr", &Dec, "UPtr", DecLen)
+    DllCall("Kernel32.dll\GlobalUnlock", "Ptr", hData)
+    DllCall("Ole32.dll\CreateStreamOnHGlobal", "Ptr", hData, "Int", True, "PtrP", pStream)
+    hGdip := DllCall("Kernel32.dll\LoadLibrary", "Str", "Gdiplus.dll", "UPtr")
+    VarSetCapacity(SI, 16, 0), NumPut(1, SI, 0, "UChar")
+    DllCall("Gdiplus.dll\GdiplusStartup", "PtrP", pToken, "Ptr", &SI, "Ptr", 0)
+    DllCall("Gdiplus.dll\GdipCreateBitmapFromStream",  "Ptr", pStream, "PtrP", pBitmap)
+    DllCall("Gdiplus.dll\GdipCreateHBITMAPFromBitmap", "Ptr", pBitmap, "PtrP", hBitmap, "UInt", 0)
+    DllCall("Gdiplus.dll\GdipDisposeImage", "Ptr", pBitmap)
+    DllCall("Gdiplus.dll\GdiplusShutdown", "Ptr", pToken)
+    DllCall("Kernel32.dll\FreeLibrary", "Ptr", hGdip)
+    DllCall(NumGet(NumGet(pStream + 0, 0, "UPtr") + (A_PtrSize * 2), 0, "UPtr"), "Ptr", pStream)
+    Return hBitmap
+}
+
+capture2Text(xSt, ySt, xEnd, yEnd) {
+
+    ; Configure coordinates relative to the active window
+    CoordMode, Pixel, Window
+    CoordMode, Mouse, Window
+
+    ; Use the values provided as parameters
+    x_start := xSt
+    y_start := ySt
+    x_end := xEnd
+    y_end := yEnd
+
+    ; Get the position of the active window
+    WinGetPos, winX, winY, winWidth, winHeight, A
+
+    ; Convert the coordinates to screen-relative
+    abs_x_start := winX + x_start
+    abs_y_start := winY + y_start
+    abs_x_end := winX + x_end
+    abs_y_end := winY + y_end
+
+    ; Run Capture2Text with the adjusted coordinates
+    RunWait, %capture2TextPath% %abs_x_start% %abs_y_start% %abs_x_end% %abs_y_end%
+    savvyValue := clipboard
+
+    return savvyValue
+}
