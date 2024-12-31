@@ -237,13 +237,12 @@ RunFunction1(dropdownPosition, dropdownQuantity) {
 RunFunction2(dropdownPosition, dropdownQuantity) {
     speed := 800 ; Default speed in milliseconds
 
-    repeatedCoordinates := []
     Coordinates := []
 
-    repeatedcoordinates.push([100, 340])
-    repeatedcoordinates.push([380, 712])
-    repeatedcoordinates.push([182, 342])
-    repeatedcoordinates.push([284, 553])
+    repeatedcoordinates.push([100, 340]) ; Carry
+    repeatedcoordinates.push([380, 712]) ; md5
+    repeatedcoordinates.push([182, 342]) ; details
+    repeatedcoordinates.push([284, 553]) ; upgrade
 
     Coordinates.push([68, 229]) ; 1
     Coordinates.push([135, 219]) ; 2
@@ -253,31 +252,53 @@ RunFunction2(dropdownPosition, dropdownQuantity) {
     Coordinates.push([135, 279]) ; 6
     Coordinates.push([212, 279]) ; 7
     Coordinates.push([276, 270]) ; 8
-
+    NoMoreMD5 := false
+    b64ImageMD5 := "iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKgSURBVEhLrdVfSFNRHMDx+yAx1AexJ3tqPQgzfOhxQ5CkP+RDNGmQg4KIkSSKMgzHmDAdymwYiCjYXDAYPq3BYOLLIELFokYkTcbIEOGKJVwGgwMi/Dq/s5177282oT8PH87ljvs9h3s5Z0pj4xWwtdnBdeMZdFyycw642NRBtDY5ODu0NlZdsEFLg02M4tpylrKXY5CJ54nESpqILmfOt2gYfjpdCS9FUv81jBbmk/XD2iH7t3ByOQ/ZmKorfCwBOwAhsZIEvy8EkdkoEZyJwjT/LZLOCgtzSSI0GTXCGFQPmIDR3Nu8iKJg4CXFwzKOY3gqTohw4dO+HpQwKleLno8GCf9ohJgYXyJEWDtUSRRXjmHzigc9XqI27B2iRFjd1aD0+QS0d0ynbmmgfSkD+87v8zE8tSr0Of1idPf7iYHHYcLNJxdhcxQngZ9AsENK2wXIJncgUp2k984TnR4+Kpag/O1UYBipidYLyzia9qVIvPuuGxT+qB5EYgL+CvQov64XlvHEPP/YHK5WDzO+EWofZEVK+8Bfk4m6Zcin+ZEQ0+D1iz3B68lC9y0/DZe+VhxtnBL7a0x4/+qHGDFmhuHweE7AsNvDd54MY/B4o6KYPCF24ozYjBkys0xf6ZmwjKrpitwi3yQmm3MUxsx+Gy4VeOyNITGehYxPIxJj/L5JdIwRoaE9GH60retxZkA53qZRa7MDlAaL0HXVBb6++JlwZKhMyOCDe2kjrK4Z0dqwZOEH94hzXef3lAgZ/KuwOT74UCMwiHquRyswvL3MP0AAhAnXuvgvUxSFsGCc6+psEayX3TBwv1fX169CVzc/S6rjtZvZPwtLGJYw3N4+IIKS1bEKSiZAw7c7R84Nj7jaIDXjEGS8pdlG4lbHKvwC0H99PCq4JpUAAAAASUVORK5CYII="
+    MD5coordsInv := SearchImage(b64ImageMD5, 750, 280, 1020, 780)
+    MD5coordsSkills := SearchImage(b64ImageMD5, 340, 665, 660, 780)
     ; Perform the click actions
     Loop, %dropdownQuantity%
     {
-        ; Access the x and y coordinates relative to the active window
         x := coordinates[dropdownPosition][1]
         y := coordinates[dropdownPosition][2]
         Send, {Click %x%, %y%} ;
         Sleep, speed
-        Loop, % repeatedCoordinates.MaxIndex()
+        Click, 100, 340
+        Sleep, speed
+        if (MD5coordsInv != "")
         {
-            ; Access the x and y coordinates relative to the active window
-            x := repeatedCoordinates[A_Index][1]
-            y := repeatedCoordinates[A_Index][2]
-            Send, {Click %x%, %y%} ;
-            Sleep, speed
+            MouseMove,MD5coordsInv.x, MD5coordsInv.y
+            Click, Right
         }
+        else if (MD5coordsSkills != "")
+        {
+            MouseMove, MD5coordsSkills.x,  MD5coordsSkills.y
+            Click
+        }
+        else
+        {
+            NoMoreMD5 := true
+            break
+        }
+
+        Sleep, speed
+        Click, 182, 342
+        Sleep, speed
+        MouseMove, 284, 553
         ClickSpam()
         Sleep, speed
-        Send, {Click 400, 100} ;
+        Send, {Click 400, 100} ; Close
         Sleep, speed
         dropdownPosition++
+        MD5coordsInv := SearchImage(b64ImageMD5, 750, 280, 1020, 780)
+        MD5coordsSkills := SearchImage(b64ImageMD5, 340, 665, 660, 780)
     }
 
-    MsgBox, Pets lvl30!
+    if(NoMoreMD5){
+        MsgBox, You run out of md5!
+    }else{
+        MsgBox, Pets lvl30!
+    }
 }
 
 ClickSpam() {
